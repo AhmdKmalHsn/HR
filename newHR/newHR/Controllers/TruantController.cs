@@ -417,7 +417,7 @@ insurance on a.id=insurance.EmployeeId
         public JsonResult AttendIn(string fileNo, DateTime d,string t)
         {
             string sql = 
- @"if exists(select * from Attendances where EmployeeId = (select id from Employees where FileNumber=@fn)and DateFrom = @d)
+ @"if exists(select *from Attendances where EmployeeId = (select id from Employees where FileNumber=@fn)and DateFrom = @d)
 begin
   --print('update');
             update Attendances set
@@ -655,8 +655,8 @@ order by c.dates asc";
             return Json(db.toJSON(db.getData(com)), JsonRequestBehavior.AllowGet);
         
         }
-        public JsonResult AttendanceBetween(int fn, DateTime f, DateTime t)
-        {
+        public JsonResult AttendanceBetween(int fn , DateTime f, DateTime t)
+        {     
             #region query
             string sql = @"
 WITH CTE_Months
@@ -860,14 +860,14 @@ SELECT ISNULL(AB.vacation,0)vacation,
 )vacDef on vacDef.FileNumber=c.FNO 
 order by c.dates asc";
             #endregion
-
-            SqlCommand com = new SqlCommand(sql);
-            com.CommandType = CommandType.Text;
-            com.Parameters.Add("@FNO", SqlDbType.Int).Value = fn;
-            com.Parameters.Add("@f", SqlDbType.Date).Value = f.Date;
-            com.Parameters.Add("@t", SqlDbType.Date).Value = t.Date;
-
-            return Json(db.toJSON(db.getData(com)), JsonRequestBehavior.AllowGet);
+            
+                SqlCommand com = new SqlCommand(sql);
+                com.CommandType = CommandType.Text;
+                com.Parameters.Add("@FNO", SqlDbType.Int).Value = fn;
+                com.Parameters.Add("@f", SqlDbType.Date).Value = f.Date;
+                com.Parameters.Add("@t", SqlDbType.Date).Value = t.Date;
+               
+               return Json(db.toJSON(db.getData(com)), JsonRequestBehavior.AllowGet);
         }
         public JsonResult SalaryFN(object fn, int M, int Y)
         {
@@ -1135,37 +1135,30 @@ SELECT c.day,c.daynum%7'daynum',
 	   cast(bb.TotalSalary/30 as decimal(10,2))'dailySalary',
 	   cast(bb.TotalSalary/30/shft.DailyHrs as decimal(10,4))'hourSalary',
 	   cast(bb.TotalSalary/30/t.DailyHours as decimal(10,2))'hourSalary1',
+	   
        t.TIMEFROM,
        t.TIMETO,
        t.ShiftId,
        case when t.DailyHours is null then shft.DailyHrs else t.DailyHours end 'DailyHours',
-	   t.ShiftDef,
-	   t.LateDef,
-	   t.LeaveDef,
-	   t.AttValue,
 	   Late,
 	   case 
-		when t.LateDef is null then 
-		   case
-			 when t.ShiftId =17 then
-				case 
-					when (late<=3 and late>=0 )or (late-[.25]<=7 and late-[.25]>=0 )or(late-[.5]<=9 and late-[.5]>=0 ) then 0
-					when (late<=22 and late>=4)or (late-[.25]<=24 and late-[.25]>=8)or(late-[.5]<=22 and late-[.5]>=10)then .25 
-					when (late<=39 and late>=23)or (late-[.25]<=37 and late-[.25]>=25)or(late-[.5]<=33 and late-[.5]>=23)then .50
-					when (late<=52 and late>=40)or (late-[.25]<=48 and late-[.25]>=38)or(late-[.5]<=52 and late-[.5]>=34)then .75
-					when (late<=75 and late>=53)or (late-[.25]<=67 and late-[.25]>=49)or(late-[.5]<=69 and late-[.5]>=53)then 1
+	   when t.ShiftId =17 then
+	   case 
+	       when (late<=3 and late>=0 )or (late-[.25]<=7 and late-[.25]>=0 )or(late-[.5]<=9 and late-[.5]>=0 ) then 0
+	       when (late<=22 and late>=4)or (late-[.25]<=24 and late-[.25]>=8)or(late-[.5]<=22 and late-[.5]>=10)then .25 
+	       when (late<=39 and late>=23)or (late-[.25]<=37 and late-[.25]>=25)or(late-[.5]<=33 and late-[.5]>=23)then .50
+	       when (late<=52 and late>=40)or (late-[.25]<=48 and late-[.25]>=38)or(late-[.5]<=52 and late-[.5]>=34)then .75
+	       when (late<=75 and late>=53)or (late-[.25]<=67 and late-[.25]>=49)or(late-[.5]<=69 and late-[.5]>=53)then 1
 
-			    end
-			 else
-				case 
-					when (late<=15 and late>=0 )or (late-[.25]<=9 and late-[.25]>=0 )or(late-[.5]<=15 and late-[.5]>=0 ) then 0
-					when (late<=22 and late>=16)or (late-[.25]<=22 and late-[.25]>=10)or(late-[.5]<=22 and late-[.5]>=10)then .25 
-					when (late<=39 and late>=23)or (late-[.25]<=45 and late-[.25]>=23)or(late-[.5]<=45 and late-[.5]>=23)then .50
-					when (late<=52 and late>=40)or (late-[.25]<=52 and late-[.25]>=46)or(late-[.5]<=52 and late-[.5]>=46)then .75
-					when (late<=75 and late>=53)or (late-[.25]<=75 and late-[.25]>=53)or(late-[.5]<=75 and late-[.5]>=53)then 1
-			 end
-		   end 
-		  else t.LateDef
+	    end
+	 else
+		case 
+	       when (late<=15 and late>=0 )or (late-[.25]<=9 and late-[.25]>=0 )or(late-[.5]<=15 and late-[.5]>=0 ) then 0
+	       when (late<=22 and late>=16)or (late-[.25]<=22 and late-[.25]>=10)or(late-[.5]<=22 and late-[.5]>=10)then .25 
+	       when (late<=39 and late>=23)or (late-[.25]<=45 and late-[.25]>=23)or(late-[.5]<=45 and late-[.5]>=23)then .50
+	       when (late<=52 and late>=40)or (late-[.25]<=52 and late-[.25]>=46)or(late-[.5]<=52 and late-[.5]>=46)then .75
+	       when (late<=75 and late>=53)or (late-[.25]<=75 and late-[.25]>=53)or(late-[.5]<=75 and late-[.5]>=53)then 1
+	    end 
 	   end lateValue,
 	   ISNULL(attend,0)'attend',
 	  (t.DailyHours*60)-(attend+Late)'Leave',
@@ -1177,7 +1170,7 @@ SELECT c.day,c.daynum%7'daynum',
 	       when ((t.DailyHours*60)-(attend+Late)<=37 and (t.DailyHours*60)-(attend+Late)>=21)or ((t.DailyHours*60)-(attend+Late)-[.25]<=30 and (t.DailyHours*60)-(attend+Late)-[.25]>=23)or((t.DailyHours*60)-(attend+Late)-[.5]<=37 and (t.DailyHours*60)-(attend+Late)-[.5]>=16)then .50
 	       when ((t.DailyHours*60)-(attend+Late)<=45 and (t.DailyHours*60)-(attend+Late)>=38)or ((t.DailyHours*60)-(attend+Late)-[.25]<=52 and (t.DailyHours*60)-(attend+Late)-[.25]>=31)or((t.DailyHours*60)-(attend+Late)-[.5]<=50 and (t.DailyHours*60)-(attend+Late)-[.5]>=38)then .75
 	       when ((t.DailyHours*60)-(attend+Late)<=67 and (t.DailyHours*60)-(attend+Late)>=46)or ((t.DailyHours*60)-(attend+Late)-[.25]<=67 and (t.DailyHours*60)-(attend+Late)-[.25]>=53)or((t.DailyHours*60)-(attend+Late)-[.5]<=67 and (t.DailyHours*60)-(attend+Late)-[.5]>=51)then 1
-		   when(((t.DailyHours*60)-(attend+Late)<=80 and (t.DailyHours*60)-(attend+Late)>=68))then 1.25
+		   when(salary.DepartementId in(324,1009,1010,1011,1012,1013,1014,1015,1016,1017,1018,1019,1020,1021) and ((t.DailyHours*60)-(attend+Late)<=80 and (t.DailyHours*60)-(attend+Late)>=68))then 1.25
 	    end
      else 
         case 
@@ -1186,7 +1179,7 @@ SELECT c.day,c.daynum%7'daynum',
 	       when ((t.DailyHours*60)-(attend+Late)<=37 and (t.DailyHours*60)-(attend+Late)>=21)or ((t.DailyHours*60)-(attend+Late)-[.25]<=37 and (t.DailyHours*60)-(attend+Late)-[.25]>=21)or((t.DailyHours*60)-(attend+Late)-[.5]<=37 and (t.DailyHours*60)-(attend+Late)-[.5]>=21)then .50
 	       when ((t.DailyHours*60)-(attend+Late)<=45 and (t.DailyHours*60)-(attend+Late)>=38)or ((t.DailyHours*60)-(attend+Late)-[.25]<=52 and (t.DailyHours*60)-(attend+Late)-[.25]>=38)or((t.DailyHours*60)-(attend+Late)-[.5]<=45 and (t.DailyHours*60)-(attend+Late)-[.5]>=38)then .75
 	       when ((t.DailyHours*60)-(attend+Late)<=67 and (t.DailyHours*60)-(attend+Late)>=46)or ((t.DailyHours*60)-(attend+Late)-[.25]<=67 and (t.DailyHours*60)-(attend+Late)-[.25]>=53)or((t.DailyHours*60)-(attend+Late)-[.5]<=67 and (t.DailyHours*60)-(attend+Late)-[.5]>=46)then 1
-		   when(t.DailyHours>8 and ((t.DailyHours*60)-(attend+Late)<=80 and (t.DailyHours*60)-(attend+Late)>=68))then 1.25
+		   when(salary.DepartementId in(324,1009,1010,1011,1012,1013,1014,1015,1016,1017,1018,1019,1020,1021) and ((t.DailyHours*60)-(attend+Late)<=80 and (t.DailyHours*60)-(attend+Late)>=68))then 1.25
 	    end 
        end  leaveValue,
 		NoOfHour addition,
@@ -1227,9 +1220,9 @@ select DATENAME(WEEKDAY, dates) 'day',datepart(DW, dates) 'daynum',cast (dates a
 from CTE_Months
 )C left join 
             (
-			 select att.*,at.AttValue,at.Late 'LateDef',at.Leave 'LeaveDef',at.ShiftId'ShiftDef' from Ak_3STAGES_FUNC_V2(@f, @t,@fno)att left join Attendances at on (att.date=at.DateFrom and att.ID=at.EmployeeId)  where(select top(1) IsPrivate from BasicBayWorks where EmployeeId=(select id from Employees where FileNumber=@fno))=1 
+			  select * from Ak_3STAGES_FUNC_V2(@f, @t,@fno)where(select top(1) IsPrivate from BasicBayWorks where EmployeeId=(select id from Employees where FileNumber=@fno))=1
 			   union All
-			  select att.*,at.AttValue,at.Late 'LateDef',at.Leave 'LeaveDef',at.ShiftId'ShiftDef' from Ak_3STAGES_FUNC_ALL_V2(@f, @t,@fno)att left join Attendances at on (att.date=at.DateFrom and att.ID=at.EmployeeId)  where (select top(1) IsPrivate from BasicBayWorks where EmployeeId=(select id from Employees where FileNumber=@fno))=0
+			  select * from Ak_3STAGES_FUNC_ALL_V2(@f, @t,@fno) where (select top(1) IsPrivate from BasicBayWorks where EmployeeId=(select id from Employees where FileNumber=@fno))=0
 			)T 
 			on(c.dates=t.[date] and c.FNO=t.FNO)
    left join (select sum(NoOfHour)'NoOfHour',EmployeeId,[Date] from AdditionApprovals group by EmployeeId,[Date]) aa on( aa.EmployeeId=t.ID and aa.[Date]=T.[date])
@@ -1475,7 +1468,6 @@ select * from data  where n=1
             return Json(db.toJSON(db.getData(com)), JsonRequestBehavior.AllowGet);
 
         }
-
         public JsonResult SalaryFileNo2(string fileNo, int M, int Y)//AMMAR
         {
             #region query

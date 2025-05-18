@@ -37,10 +37,6 @@ namespace newHR.Controllers
         {
             return View();
         }
-        public ActionResult paymentsDept()//خصومات
-        {
-            return View();
-        }
         public ActionResult Loans()//سلف
         {
             return View();
@@ -49,15 +45,7 @@ namespace newHR.Controllers
         {
             return View();
         }
-        public ActionResult Sedulity()
-        {
-            return View();
-        }
         public ActionResult AttendanceTotal()//الحضور والانصراف لفترة معينة
-        {
-            return View();
-        }
-        public ActionResult CutsReport()//الحضور والانصراف لفترة معينة
         {
             return View();
         }
@@ -136,7 +124,7 @@ namespace newHR.Controllers
 	   --b.TotalSalary,
 	   sum(p.DaysNumber)days,
 	   sum(p.Amount)amount 
-from deductions p,
+from Payments p,
      Employees e,
 	 Departements d,
 	 BasicBayWorks b
@@ -163,7 +151,7 @@ group by(d.Name)
 	   b.TotalSalary,
 	   p.DaysNumber,
 	   p.Amount 
-from deductions p,
+from Payments p,
      Employees e,
 	 Departements d,
 	 BasicBayWorks b

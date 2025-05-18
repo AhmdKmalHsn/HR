@@ -50,18 +50,6 @@
                 <input type="number" class="form-control" id="timeValue1" />:<input type="number" class="form-control" id="timeValue2" />
             </div>
         </div>
-        <div class="col-2">
-            <div class="col-form-label">قيمة الغياب من اليوم</div>
-        </div>
-        <div class="col-4">
-            <div class="input-group">
-                <select class="form-control" id="dayPart">
-                <option value=0>0</option>
-                <option value=0.25>0.25</option>
-                <option value=0.5>0.5</option>
-                </select>
-            </div>
-        </div>
     </div>
     <hr>
     <div class="row p-2">
@@ -85,7 +73,7 @@
             
             var data1 = readSQL(sql1);*/
            
-            var sql2 = `select Id,[From],[To],Value,DelayId,DayPart from  DelayFromToes where DelayId =${id}`;
+            var sql2 = `select Id,[From],[To],Value,DelayId from  DelayFromToes where DelayId =${id}`;
             var table;
            
             function init() {
@@ -105,10 +93,6 @@
                             {
                                 title: "Value",
                                 data: "Value",
-                            },
-                            {
-                                title: "DayPart",
-                                data: "DayPart",
                             },
                             {
                                 title: "delete",
@@ -134,7 +118,7 @@
             var dialog = $('#AddForm').dialog(
                  {
                      autoOpen: false,
-                     height: 350,
+                     height: 280,
                      width: 550,
                      modal: true,
                  });
@@ -145,7 +129,7 @@
 
 
             $("#timeSubmit").click(function () {
-                var sql = `insert  into DelayFromToes([From],[To],Value,DelayId,daypart)values('${$("#timeFrom").val()}','${$("#timeTo").val()}','${$("#timeValue2").val()}:${$("#timeValue1").val()}',${id},${$("#dayPart").val()})`
+                var sql = `insert  into DelayFromToes([From],[To],Value,DelayId )values('${$("#timeFrom").val()}','${$("#timeTo").val()}','${$("#timeValue2").val()}:${$("#timeValue1").val()}',${id})`
           
                 if (excuteSQL(sql) == 1)
                 {

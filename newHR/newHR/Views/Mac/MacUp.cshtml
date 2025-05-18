@@ -82,7 +82,7 @@
             <tr>
                 <td><input class="macCheckBox" style="transform:scale(2);" type="checkbox" id=@row.MacIP></td>
                 <td>@row.Id</td>
-                <td class="@row.MacIP ucolor">@row.MacIP</td>
+                <td class="@row.MacIP">@row.MacIP</td>
                 <td>@row.MacName</td>
                 <td>@row.MacType</td>
                 <td><button onclick="update(this)" class="btn btn-success btn-lg btn-block">
@@ -270,7 +270,6 @@ $("#updateBtn").click(function () {
     $('#okay').click(function () {
         MacList = [];
         //$('#tbl').hide();
-        $('.ucolor').css("background-color","#00000000")
         console.log($('.macCheckBox:checked').length);
         $('.macCheckBox:checked').each(function (index) {
             MacList.push($(this).attr("id"));          
@@ -315,7 +314,6 @@ $("#updateBtn").click(function () {
                 
                 $.when.apply($, promises).always(function () {
                     console.log('All Done');
-                    console.log(res);
                     $.each(res, function (key, item) {
                         if (machine.find(w=>w.IP == item.MacIP).dir == "All") {
                             

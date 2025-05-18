@@ -78,6 +78,9 @@
                     خصم التامين
                 </td>
                 <td class="filter">
+                    خصومات 
+                </td>
+                <td class="filter">
                     تأخيرات
                 </td>
                 <td class="filter">
@@ -152,7 +155,9 @@
                     <td>
                         @row.Insurance
                     </td>
-
+                    <td>
+                        @row.Sanctions_Delays
+                    </td>
                     <td>
                         @row.Delays
                     </td>
@@ -183,20 +188,95 @@
                 </tr>
             }
         </tbody>
+        <tfoot>
+         <tr>
+                <td>
+                    م
+                </td>
+                <td >
+                    الاسم
+                </td>
+                <td>
+                    حضور
+                </td>
+                <td>
+                    أجازة
+                </td>
+                <td>
+                    غياب
+                </td>
+                <td>
+                    SalaryMonth
+                </td>
+                <td>
+                    DaysValue
+                </td>
+                <td>
+                    RegularityIncentive
+                </td>
+                <td>
+                    ExpensiveIncetive
+                </td>
+                <td>
+                    ManagmentIncetive
+                </td>
+                <td>
+                    SkillIncentive
+                </td>
+                <td>
+                    Overtime
+                </td>
+                <td>
+                    Total1
+                </td>
+                <td>
+                    Insurance
+                </td>
+                <td>
+                    Sanctions_Delays
+                </td>
+                <td>
+                    Delays
+                </td>
+                <td>
+                    Deductions
+                </td>
+                <td>
+                    Clothes
+                </td>
+                <td>
+                    Loans
+                </td>
+                <td>
+                    Total2
+                </td>
+                <td>
+                    Total3
+                </td>
+                <td>
+                    Department
+                </td>
+                <td>
+                    Year
+                </td>
+                <td>
+                    Month
+                </td>
+            </tr>
+        </tfoot>
     </table>
     
 
 </div>
-<script>
+  <script>
       $(document).ready(function () {
-
-            var table = $('#example').DataTable({
-                orderCellsTop: true,
-                //fixedHeader: true, 
-                stateSave: true,
-                scrollX:true,
-                dom: 'Qlfrtip'
-            });
-        });
+          // Setup - add a text input to each footer cell
+         
+          var table = $('#example').DataTable({
+              orderCellsTop: true,
+              fixedHeader: true,
+              scrollX: true
+          });
+      });
 
 </script>

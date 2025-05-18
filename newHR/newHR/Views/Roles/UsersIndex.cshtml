@@ -60,8 +60,8 @@ margin:8px;
 <h2> المستخدمين</h2>
 
 <div id="table1">
-    <button id="btn-add" class="btn btn-info">إنشاء حساب جديد</button>
-    <table id="myTable" class="display" width="100%" dir="rtl">
+    <button id="btn-add">إنشاء حساب جديد</button>
+    <table id="myTable" class="display" dir="rtl">
         <thead>
             <tr>
                 <th>م</th>
@@ -106,13 +106,13 @@ margin:8px;
         </tfoot>
     </table>
 </div>
-    <div  id="form" dir="rtl">
+    <div style="opacity:0;height:0;" id="form" dir="rtl">
 		<div class="input-group">
 			<input class="form-control" type="text" name="id" id="Id" readonly />
         </div>
 		<div class="input-group">
 			<span class="input-group-text">الحساب</span>
-			<input class="form-control" type="text" name="userName" id="userNameId" />
+			<input class="form-control" type="text" name="userName" id="userName" />
 		 </div>
 		<div class="input-group">	
 			<span class="input-group-text">الرقم السري</span>
@@ -131,26 +131,21 @@ margin:8px;
 				}
 			</select>
 		 </div>
-		<div class=row>
-            <div class=col>
-                <div class="input-group">
-			        <span class="input-group-text">يلزم موافقة</span>
-			        <input  style="width:30px" type="checkbox"  name="" id="Approve"  />
-		        </div>
-            </div>
-            <div class=col>
-                <div class="input-group">
-			        <span class="input-group-text">موافقة من</span>
-                    <select class="form-control" name="roles" id="ApproveFrom" placeholder="select......">
-				        <option value="-1">بدون</option>
-                          @foreach (var row in db.Query(sql3))
-			            	{
-			            		<option value="@row.id">@row.UserName</option>
-				            }
-			        </select>
-		        </div>
-            </div>
-         </div>
+		 <div class="input-group">
+			<span class="input-group-text">يلزم موافقة</span>
+			<input  style="width:30px" type="checkbox"  name="" id="Approve"  />
+		 </div>
+		<div class="input-group">
+			<span class="input-group-text">موافقة من</span>
+			
+            <select class="form-control" name="roles" id="ApproveFrom" placeholder="select......">
+				<option value="-1">بدون</option>
+                @foreach (var row in db.Query(sql3))
+				{
+					<option value="@row.id">@row.UserName</option>
+				}
+			</select>
+		 </div>
 		<fieldset>
 		<legend>الجميع</legend>
 		<hr>
@@ -237,32 +232,42 @@ margin:8px;
     </div>
 
 <script>  
-    /*$('#myTable thead td').each(function () {
+    $('#myTable thead td').each(function () {
         var title = $(this).text();
         $(this).append('<input type="text" placeholder="Search ' + title + '" />');
-    });*/
+    });
     var table = $('#myTable').DataTable({
-        
+        initComplete: function () {
+            // Apply the search
+            this.api()
+                .columns()
+                .every(function () {
+                    var that = this;
+
+                    $('input', this.header()).on('keyup change clear', function () {
+                        if (that.search() !== this.value) {
+                            that.search(this.value).draw();
+                        }
+                    });
+                });
+        },
     });  
     $('#myTable').on('click', 'td', function () {
-        //var table = $('#myTable').DataTable();
+        var table = $('#myTable').DataTable();
         var data = table.row(this).data();
         var index = table.column(this).index();
-        //console.log(data[0]);
-    
+        console.log(data[0]);
 		getdata(data[0]);  
-        $("#form").dialog("open");
     });
 </script>
 <script>
 function back()
 {
-    //$('#table1').show(1000);
-    //$('#form').css("opacity","0");
-    //document.documentElement.scrollTop = 0;
-    $("#form").dialog("close");
+    $('#table1').show(1000);
+    $('#form').css("opacity","0");
+    document.documentElement.scrollTop = 0;
     $("#Id").val(""); 
-    $("#userNameId").val(""); 
+    $("#userName").val(""); 
 	$("#name").val(""); 
     $("#password").val(""); 
     $("#roles").val(0);    
@@ -303,7 +308,7 @@ if($('#tags2 .cont').length>0)
 }	
 var sql=" begin transaction "+
         " insert into users2 (UserName,Password,Name,RoleId,[All],Departments,Employees,HaveApprove,ApproveId) values('"
-        + $("#userNameId").val()+
+        + $("#userName").val()+
         "', '"+$("#password").val()+
         "', '"+$("#name").val()+
         "', '"+$("#roles").val()+
@@ -318,8 +323,7 @@ var sql=" begin transaction "+
         sqlEmp+
         " commit transaction ";
 
- if(excuteSQL(sql)==1)alert("تم الحفظ بنجاح");
- alert("خطأ")
+ console.log(excuteSQL(sql));
  back();
 }
 function update()
@@ -350,7 +354,7 @@ if($('#tags2 .cont').length>0)
     
 }	
 var sql=" begin transaction "+
-        " update users2 set UserName='"+$("#userNameId").val()+
+        " update users2 set UserName='"+$("#userName").val()+
         "', Password='"+$("#password").val()+
         "', Name='"+$("#name").val()+
         "', RoleId='"+$("#roles").val()+
@@ -366,8 +370,8 @@ var sql=" begin transaction "+
         sqlEmp+
         " commit transaction "
         ;
-if(excuteSQL(sql)==1)alert("تم الحفظ بنجاح ");
-else alert(" خطأ ");
+
+ console.log(excuteSQL(sql));
 }
 function getdata(user_id)
 {
@@ -394,7 +398,7 @@ var data2=readSQL(sql2);
 var data3=readSQL(sql3);
 
 		$("#Id").val(data1[0].Id);
-		$("#userNameId").val(data1[0].UserName); 
+		$("#userName").val(data1[0].UserName); 
 		$("#name").val(data1[0].Name); 
         $("#password").val(data1[0].password); 
         $("#roles").val(data1[0].RoleId);
@@ -417,9 +421,8 @@ $("#tags2").append('<span class="cont" id="'+(data3[i].FileNumber)+'">'+(data3[i
 
 }
   $('#btn-sbmt-add').hide();
-  $('#btn-sbmt-add').hide();
-  //$('#table1').hide(1000);
-  //$('#form').css("opacity","100"); 
+  $('#table1').hide(1000);
+  $('#form').css("opacity","100"); 
  }
 
 function remove(e){
@@ -463,16 +466,13 @@ function selectEmp(e)
 $("#btn-add").click(function(){
     $("#btn-sbmt-update").hide();
     $("#btn-sbmt-add").show();
-    $("#form").dialog('open');
-    //$("#table1").hide();
-    //$("#form").css("opacity","100");
+    
+    $("#table1").hide();
+    $("#form").css("opacity","100");
 });
 
 
-$("#form").dialog({
-    width:$(window).width()*.8,
-    autoOpen:false
-});
+
 </script>
 
 

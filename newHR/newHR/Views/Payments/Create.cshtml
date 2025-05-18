@@ -1,17 +1,16 @@
-﻿@using WebMatrix.Data; 
+﻿@using WebMatrix.Data;
 @{
     var db = Database.Open("CS");
-    var sql= "select Id,Name from paymentDeductions ORDER BY Name";
+    var sql = "select Id,Name from paymentDeductions ORDER BY Name";
 }
 
 <style>
-    label 
-    {
-        font-size:20px;
-        background-color:azure;
-        border:solid 1px azure;
-        border-radius:8px;
-        padding:8px; 
+    label {
+        font-size: 20px;
+        background-color: azure;
+        border: solid 1px azure;
+        border-radius: 8px;
+        padding: 8px;
     }
 </style>
 <h2>Create new Payment</h2>
@@ -35,12 +34,12 @@
             <div class="col-4">
                 <div class="row">
                     <div class="col-10">
-					    <input type="number" class="form-control" name="fileNo" onfocusout="selectList(this.value)" required />
-					</div>
-					 <div class="col-1">
-						<button type="button" class="btn" id="openList">&#9776;</button>
-				    </div>
-				</div>
+                        <input type="number" class="form-control" name="fileNo" onfocusout="selectList(this.value)" required />
+                    </div>
+                    <div class="col-1">
+                        <button type="button" class="btn" id="openList">&#9776;</button>
+                    </div>
+                </div>
             </div>
         </div>
         <div class="row m-1">
@@ -102,7 +101,7 @@
                 </label>
             </div>
             <div class="col-4">
-                <input type="number" class="form-control" step="0.01" value="0" name="daysNumber" onchange="convert(this.value)" onkeyup="convert(this.value)" required />
+                <input type="number" class="form-control" value="0" name="daysNumber" onchange="convert(this.value)" onkeyup="convert(this.value)" required />
             </div>
         </div>
         <div class="row m-1">
@@ -128,8 +127,7 @@
     <input class="btn btn-primary" type="submit">
 </form>
 <div id="employees">
-<table id="empTable" class="display" width=600 >
-</table>
+    <table id="empTable" class="display" width=600></table>
 </div>
 <script>
 
@@ -182,7 +180,7 @@ function selectList(e)
 	 console.log(f[0].basicsalary)
 	 dialog.dialog( "close" );
 	}
-	
+
 function convert(e)
 {
  $("input[name=amount]").val(f[0].basicsalary*e/30);

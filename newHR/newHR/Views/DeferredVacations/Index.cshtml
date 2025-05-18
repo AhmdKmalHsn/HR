@@ -76,70 +76,22 @@
  function readVacs(mainData)
 {
 var  sql0=
-/*"select DateFrom,sum(DayPart)DayPart from Absences where " +
+"select DateFrom,sum(DayPart)DayPart from Absences where " +
 "    DateFrom>='"+mainData.OBdate+"' "+
 "and AbsenceTypeId in(3,7) and "+
 "    EmployeeId =(select id  from Employees where FileNumber='"+mainData.fileNo+"')"+
-"group by DateFrom order by DateFrom asc";*/
-`declare @@f date ;
-set @@f='${mainData.OBdate}'
-;with month_cte as
-( 
-select @@f dateDay
-union All
-select dateadd(day,1,dateDay)
-from month_cte
-where dateDay<=getdate()
-)
-select dateDay,isnull(DayPart,0) DayPart ,case when DATEPART(day, dateDay)=26 then 1.75 else 0 end 'addition' from month_cte c left join
-(
-select DateFrom,sum(DayPart)DayPart from Absences where
-    DateFrom>=@@f
-and AbsenceTypeId in(3,7) and 
-    EmployeeId =(select id  from Employees where FileNumber='${mainData.fileNo}')
-group by DateFrom
-)q
-on q.DateFrom=c.dateDay
-where DayPart is not null or DATEPART(day, dateDay)=26
-order by dateDay asc 
-option (maxrecursion 0)
-`;
-console.log(mainData)
-var data=readSQL(sql0)
-console.log(data)
-var balance=mainData.OB
+"group by DateFrom order by DateFrom asc";
+var data=readSQL(sql0);
 if(data.length==0)
 	{
-       //console.log('fail!');
-       /*var html='<table border=1 dir="rtl" class="table table-bordered"><tr><th>التاريخ</th><th>الاجازة</th><th>الرصيد</th></tr>';
+       console.log('fail!');
+       var html='<table border=1 dir="rtl" class="table table-bordered"><tr><th>التاريخ</th><th>الاجازة</th><th>الرصيد</th></tr>';
            html+='<tr style="background-color:yellow"><th>'+ mainData.OBdate +'</th><th></th><th>'+ mainData.OB +'</th></tr>';
            html+='<tr style="background-color:yellow"><th>'+ new Date().toISOString().substr(0,10)+'</th><th></th><th>'+mainData.balance+'</th></tr>'
            html+='</table>';
-       $("#dialog-form").html(html);*/
-	}
-    else
-    {
-        var html='<table border=1 dir="rtl" class="table table-bordered"><tr><th>التاريخ</th><th>الاجازة</th><th>اضافة رصيد</th><th>الرصيد</th></tr>';
-            html+='<tr><th style="background-color:yellow">'+ mainData.OBdate+
-                      '</th><th style="background-color:skyblue" colspan=2 >'+ "رصيد افتتاحي "+
-                      /*'</th><th style="background-color:#55FF44">'+ data[i].addition +*/
-                      '</th><th style="background-color:#11cc33">'+ balance +'</th></tr>';
-            for(var i=0; i<data.length;i++)
-            {
-                balance=parseFloat(balance)+parseFloat(data[i].addition)-parseFloat(data[i].DayPart);
-                html+='<tr><th style="background-color:yellow">'+ data[i].dateDay.substr(0,10) +
-                      '</th><th style="background-color:#aabb00">'+ data[i].DayPart +
-                      '</th><th style="background-color:#55FF44">'+ data[i].addition +
-                      '</th><th style="background-color:#11cc33">'+ balance +'</th></tr>';
-            }
-            
-            //html+='<tr style="background-color:yellow"><th>'+ new Date().toISOString().substr(0,10)+'</th><th></th><th>'+mainData.balance+'</th></tr>'
-            html+='</table>';
        $("#dialog-form").html(html);
-
-
-    }
-/*else
+	}
+else
 	{
         var html='<table border=1 dir="rtl" class="table table-bordered"><tr><th>التاريخ</th><th>الاجازة</th><th>الرصيد</th></tr>';
         html+='<tr style="background-color:yellow"><th>'+mainData.OBdate+'</th><th></th><th>'+mainData.OB+'</th></tr>'
@@ -163,7 +115,7 @@ if(data.length==0)
         html+='</table>';
        //console.log(html);
         $("#dialog-form").html(html);
-	}*/
+	}
 }
 var dialog = $( "#dialog-form" ).dialog({
       autoOpen: false,

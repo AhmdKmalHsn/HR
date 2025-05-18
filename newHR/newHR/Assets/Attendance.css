@@ -66,12 +66,12 @@ tr:hover {
         position: relative;
 }
 @font-face {
-  /* font-family: myFirstFont;
-   src: url(webfonts/Cairo-Bold.ttf);*/
+   font-family: myFirstFont;
+   src: url(webfonts/Cairo-Bold.ttf);
 }
 
 * {
-   /*font-family: myFirstFont;*/
+   font-family: myFirstFont;
 }
 .dropdown-menu li{
     cursor:pointer;
@@ -83,7 +83,9 @@ tr:hover {
     vertical-align: middle;
     border-color: #ffc107;
 }
+.myModal {
 
+}
 .modal-content{
     background-image:linear-gradient(45deg,skyblue,white);
 }
